@@ -32,6 +32,8 @@ import android.webkit.WebView
 import kotlin.math.abs
 import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.FrameLayout
 import android.content.res.ColorStateList
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -208,7 +210,17 @@ class MainActivity : Activity() {
         web.zoomedCheck = { baseScale > 0f && web.scale > baseScale * 1.08f }
         paintPan()
         root.addView(web, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
-        setContentView(root)
+        val frame = FrameLayout(this)
+        frame.addView(root, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        val splash = FrameLayout(this)
+        splash.setBackgroundColor(0xFF0A2124.toInt())
+        val logo = ImageView(this)
+        logo.setImageResource(R.drawable.ic_launcher)
+        val sz = (130 * resources.displayMetrics.density).toInt()
+        splash.addView(logo, FrameLayout.LayoutParams(sz, sz, Gravity.CENTER))
+        frame.addView(splash, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        splash.animate().alpha(0f).setStartDelay(1000).setDuration(450).withEndAction { frame.removeView(splash) }.start()
+        setContentView(frame)
 
         web.settings.apply {
             javaScriptEnabled = true
